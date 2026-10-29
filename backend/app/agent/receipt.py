@@ -9,7 +9,9 @@ from ..config import settings
 from . import llm
 
 SYSTEM = """You read receipt photos for an expense tool. Return only JSON with keys:
-merchant (string), total (number), currency (string, ISO), occurred_at (ISO 8601 with offset if printed, else null),
+merchant (string, title case, e.g. "Harbor Table"), total (number, the final amount paid including tip),
+currency (string, ISO), occurred_at (the date and time printed on the receipt as "YYYY-MM-DDTHH:MM:SS" in 24-hour
+local time with no timezone, e.g. "Tue Oct 27 2026 9:52 PM" -> "2026-10-27T21:52:00"; null only if no date is printed),
 city (string or null), guest_count (integer or null, from 'guests', 'covers', or number of entrees), items (array of
 {name, amount}), confidence (0-1). Never invent a total; if unreadable, set total to null and confidence under 0.3."""
 
@@ -43,7 +45,7 @@ def read_receipt(image: bytes | None, media_type: str = "image/jpeg", hints: dic
             out = {}
             hints = {**hints, "note": f"model unavailable: {type(exc).__name__}"}
         return Receipt(
-            merchant=out.get("merchant") or hints.get("merchant") or "Unknown merchant",
+            merchant=_title(out.get("merchant") or hints.get("merchant") or "Unknown merchant"),
             total=out.get("total") if out.get("total") is not None else hints.get("total"),
             currency=out.get("currency") or "USD",
             occurred_at=out.get("occurred_at") or hints.get("occurred_at") or (now or datetime.now()).isoformat(),
@@ -62,6 +64,13 @@ def read_receipt(image: bytes | None, media_type: str = "image/jpeg", hints: dic
         items=hints.get("items", []),
         confidence=0.95 if hints.get("total") is not None else 0.2,
     )
+
+
+def _title(name: str) -> str:
+    """Receipts print merchants in caps. Keep short all-caps tokens (SFO, LLC) as they are."""
+    if name != name.upper():
+        return name
+    return " ".join(w if (len(w) <= 3 and w.isalpha()) else w.capitalize() for w in name.split())
 
 
 def sidecar_hints(image_path) -> dict:

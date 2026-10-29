@@ -52,6 +52,10 @@ def _log(conn, rep_id, direction, body, media_url=None, payload=None):
     conn.commit()
 
 
+def _clock(dt: datetime) -> str:
+    return dt.strftime('%-I %p') if dt.minute == 0 else dt.strftime('%-I:%M %p')
+
+
 def _money(x: float) -> str:
     return f"${x:,.2f}"
 
@@ -101,7 +105,11 @@ def _on_receipt(conn, rep_id, image, media_type, hints, now, crm, cal) -> Turn:
     receipt: Receipt = read_receipt(image, media_type, hints, now)
     when = datetime.fromisoformat(receipt.occurred_at) if receipt.occurred_at else (now or datetime.now())
     if when.tzinfo is None:
-        when = when.replace(tzinfo=datetime.now().astimezone().tzinfo)
+        # The receipt prints local time. Use the timezone of the rep's calendar events that day; else this machine's.
+        same_day = [e for e in cal.events if e.rep_id == rep_id and e.start.date() == when.date()]
+        tz = same_day[0].start.tzinfo if same_day else datetime.now().astimezone().tzinfo
+        when = when.replace(tzinfo=tz)
+        receipt.occurred_at = when.isoformat()
 
     if receipt.total is None:
         turn.replies.append(Reply("I couldn’t read a total on that one. Can you send a clearer photo, or text me the amount?"))

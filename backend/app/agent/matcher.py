@@ -97,7 +97,11 @@ LLM_SYSTEM = """You adjudicate which customer account a sales expense belongs to
 nearby calendar events, and scored candidates with their evidence. Return JSON:
 {"account_id": string or null, "confidence": 0-1, "explanation": one sentence citing the evidence,
  "ask": boolean}. Set ask=true when the evidence does not clearly point to one account. Never set confidence
-above the strongest candidate's heuristic score + 0.05. If no candidate fits, account_id null and ask true."""
+above the strongest candidate's heuristic score + 0.05. If no candidate fits, account_id null and ask true.
+Two rules override your judgement: (1) if a candidate's evidence says the rep tagged this merchant around this time
+to that account before, that is the rep's own answer: pick it, ask=false, confidence at least 0.85, unless the receipt
+plainly contradicts it (different city, a different company named on it). (2) a calendar event whose external
+attendees belong to the candidate's domain is decisive on its own: ask=false."""
 
 
 def match(conn: sqlite3.Connection, rep_id: str, receipt: Receipt, when: datetime,

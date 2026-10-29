@@ -6,8 +6,10 @@ from ..config import settings
 from . import llm
 from .receipt import Receipt
 
-SYSTEM = """Write a one-line expense memo (max 14 words) a finance team would accept. Name the account, the purpose
-(dinner, coffee, travel), and the attendee count if known. No fluff. Return JSON {"memo": string}."""
+SYSTEM = """Write a one-line expense memo a finance team would accept, max 10 words, in this shape:
+"<Purpose> with <account short name>[, <N> attendees]". Purpose is dinner, lunch, coffee, flight, hotel, or ground
+transport. Use the calendar event title to sharpen the purpose (e.g. "Renewal dinner"). No amount, no city, no
+merchant name, no parentheses, no trailing period. Return JSON {"memo": string}."""
 
 
 def draft_memo(receipt: Receipt, account: Account, event: CalendarEvent | None, attendees: str | None) -> str:
