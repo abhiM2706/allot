@@ -10,10 +10,10 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=BACKEND_DIR / ".env", extra="ignore")
 
+    # "anthropic" Claude via the Anthropic API (ANTHROPIC_API_KEY). Default.
     # "bedrock"   Claude via Amazon Bedrock (AWS credentials or a Bedrock API key)
-    # "anthropic" Claude via the Anthropic API (ANTHROPIC_API_KEY)
     # "mock"      same pipeline, deterministic heuristics, no model calls
-    provider: str = "bedrock"
+    provider: str = "anthropic"
 
     # Bedrock
     aws_region: str = "us-west-2"
