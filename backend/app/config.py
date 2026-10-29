@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     twilio_auth_token: str | None = None
     twilio_from_number: str | None = None
 
-    database_path: Path = BACKEND_DIR / "tabbed.db"
+    database_path: Path = BACKEND_DIR / "allot.db"
     cors_origins: list[str] = ["http://localhost:3000"]
 
     @property

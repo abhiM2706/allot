@@ -1,10 +1,10 @@
-# Tabbed product brief
+# Allot product brief
 
 Oct 29, 2026 · Abhinav Malviya · BBS × Ramp Hackathon, Round 2 (technical build)
 
 ## Summary
 
-Tabbed is a text-message agent that ties every sales T&E expense to the customer it was for, and shows finance that spend next to the deal's value. A rep texts a photo of a receipt. The agent reads it, matches it to a calendar event and a CRM opportunity, tags the account, writes the memo, and routes it for approval. Finance gets a per-account view of T&E as a share of deal value, with accounts over a set limit flagged while the deal is still open.
+Allot is a text-message agent that ties every sales T&E expense to the customer it was for, and shows finance that spend next to the deal's value. A rep texts a photo of a receipt. The agent reads it, matches it to a calendar event and a CRM opportunity, tags the account, writes the memo, and routes it for approval. Finance gets a per-account view of T&E as a share of deal value, with accounts over a set limit flagged while the deal is still open.
 
 It builds on what Ramp already does well, receipt matching and memo automation, and adds the one piece that still lives in a spreadsheet: which customer the spend was for, and whether it was worth it. All names and numbers are sample data.
 
@@ -22,7 +22,7 @@ The cost is not only wasted spend. It is also the opposite: finance cannot tell 
 
 ## Who it is for
 
-| Person | What they do today | What Tabbed changes |
+| Person | What they do today | What Allot changes |
 | --- | --- | --- |
 | Sales rep (Maya, Tom) | Digs up receipts when finance pings, types "client dinner" in the memo, picks a customer from a dropdown or skips it | Texts a photo from the table. Answers one question at most. Never opens an expense app. |
 | Sales manager (Priya) | Approves expenses with no context on which account or why | Sees the account, the deal value, and T&E to date beside every expense. Routine ones are approved for her. |

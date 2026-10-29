@@ -6,7 +6,7 @@ import httpx
 
 from ..config import settings
 
-log = logging.getLogger("tabbed.sms")
+log = logging.getLogger("allot.sms")
 
 
 def send_sms(to: str, body: str) -> dict:

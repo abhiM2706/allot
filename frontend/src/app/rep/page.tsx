@@ -61,7 +61,7 @@ export default function RepPage() {
           <button onClick={() => setTab(tab === "thread" ? "expenses" : "thread")} className="chip bg-white border border-field">{tab === "thread" ? "My expenses" : "Messages"}</button>
         </div>
         {tab === "thread" ? (
-          <Phone title="Tabbed" sub="Text a receipt to log it" clock={clock}>
+          <Phone title="Allot" sub="Text a receipt to log it" clock={clock}>
             <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-2.5">
               {msgs.length === 0 && <div className="text-center text-xs text-mute mt-10">Send a receipt below to start.</div>}
               {msgs.map((m) => <Bubble key={m.id} m={m} />)}

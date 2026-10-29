@@ -1,5 +1,5 @@
 """End-to-end tests on the five sample scenarios, running the deterministic path (no API key needed).
-With ANTHROPIC_API_KEY set and TABBED_TEST_LIVE=1 they run against Claude too."""
+With ANTHROPIC_API_KEY set and ALLOT_TEST_LIVE=1 they run against Claude too."""
 
 import os
 import sqlite3

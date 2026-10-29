@@ -1,4 +1,4 @@
-"""Tabbed API. FastAPI over SQLite. Routers are grouped by who uses them: rep (SMS), manager, finance, admin."""
+"""Allot API. FastAPI over SQLite. Routers are grouped by who uses them: rep (SMS), manager, finance, admin."""
 
 import json
 from datetime import datetime
@@ -18,7 +18,7 @@ from .agent.receipt import sidecar_hints
 from .config import FIXTURES_DIR, settings
 from .db import connect, cursor, get_rules, init_db, set_rules
 
-app = FastAPI(title="Tabbed", version="0.1.0", description="T&E tied to the customer it was for.")
+app = FastAPI(title="Allot", version="0.1.0", description="Allot every receipt to the account it was for.")
 app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins + ["*"], allow_methods=["*"], allow_headers=["*"])
 app.mount("/fixtures/receipts", StaticFiles(directory=FIXTURES_DIR / "receipts"), name="receipts")
 
@@ -96,7 +96,7 @@ async def twilio_webhook(request: Request, conn=Depends(db)):
     frm = form.get("From", "")
     rep_id = REP_BY_PHONE.get(frm)
     if not rep_id:
-        return Response(_twiml("This number isn’t set up with Tabbed yet."), media_type="application/xml")
+        return Response(_twiml("This number isn’t set up with Allot yet."), media_type="application/xml")
     image, mtype = None, "image/jpeg"
     if int(form.get("NumMedia", "0") or 0) > 0:
         url, mtype = form.get("MediaUrl0"), form.get("MediaContentType0", "image/jpeg")

@@ -13,8 +13,8 @@ export default function Onboarding() {
     <div className="min-h-screen flex items-center justify-center p-10 gap-10">
       <Phone>
         <div className="flex-1 p-5 pt-7 flex flex-col gap-4">
-          <div className="w-[52px] h-[52px] rounded-full bg-teal text-white text-2xl font-bold flex items-center justify-center">T</div>
-          <div><div className="text-[26px] font-bold leading-tight">Set up Tabbed</div><div className="text-[15px] text-mute mt-1.5">Three connections, then you only ever text us a photo.</div></div>
+          <div className="w-[52px] h-[52px] rounded-full bg-teal text-white text-2xl font-bold flex items-center justify-center">A</div>
+          <div><div className="text-[26px] font-bold leading-tight">Set up Allot</div><div className="text-[15px] text-mute mt-1.5">Three connections, then you only ever text us a photo.</div></div>
           {STEPS.map((s) => (
             <div key={s.t} className={`card p-4 flex gap-3.5 ${s.dim ? "opacity-60" : ""}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${s.done ? "bg-teal text-white" : "bg-teal-tint text-teal-deep"}`}>{s.n}</div>

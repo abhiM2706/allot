@@ -8,7 +8,7 @@ export function Phone({ children, title, sub, clock = "9:41" }: { children: Reac
       <div className="h-[54px] px-6 pt-4 flex justify-between font-semibold text-[15px]"><span>{clock}</span><span className="text-[13px]">●●● 100%</span></div>
       {title && (
         <div className="bg-white border-b border-line px-5 pt-2.5 pb-3.5 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-teal text-white font-bold flex items-center justify-center">T</div>
+          <div className="w-10 h-10 rounded-full bg-teal text-white font-bold flex items-center justify-center">A</div>
           <div><div className="font-semibold">{title}</div><div className="text-[13px] text-mute">{sub}</div></div>
         </div>
       )}
@@ -52,8 +52,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex">
       <aside className="w-60 bg-white border-r border-line p-4 flex flex-col gap-1 shrink-0">
         <Link href="/" className="flex items-center gap-2.5 px-2 pb-5">
-          <div className="w-8 h-8 rounded-full bg-teal text-white text-sm font-bold flex items-center justify-center">T</div>
-          <span className="font-semibold">Tabbed</span>
+          <div className="w-8 h-8 rounded-full bg-teal text-white text-sm font-bold flex items-center justify-center">A</div>
+          <span className="font-semibold">Allot</span>
         </Link>
         {NAV.map(([n, href]) => {
           const active = href === "/finance" ? path === "/finance" : path.startsWith(href);
@@ -87,7 +87,7 @@ export function PageTitle({ title, sub, right }: { title: string; sub?: string; 
   return (
     <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
       <div>
-        <div className="text-sm font-semibold text-teal-deep">Tabbed</div>
+        <div className="text-sm font-semibold text-teal-deep">Allot</div>
         <h1 className="text-3xl font-bold leading-tight">{title}</h1>
         {sub && <div className="text-sm text-mute mt-1">{sub}</div>}
       </div>

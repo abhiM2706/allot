@@ -12,10 +12,10 @@ export default function Home() {
     <main className="min-h-screen">
       <section className="bg-teal text-white px-10 py-20">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-6xl font-bold">Tabbed</h1>
-          <p className="text-2xl mt-3 text-teal-tint">T&E tied to the customer it was for.</p>
+          <h1 className="text-6xl font-bold">Allot</h1>
+          <p className="text-2xl mt-3 text-teal-tint">Allot every receipt to the account it was for.</p>
           <p className="mt-8 max-w-2xl text-teal-tint">
-            Ramp shows what a company spent. Tabbed adds which customer it was for and whether it was worth it: a rep texts a
+            Ramp shows what a company spent. Allot adds which customer it was for and whether it was worth it: a rep texts a
             photo of a receipt, the agent matches it to a calendar event and a CRM deal, and finance sees spend against deal
             value while the deal is still open. BBS × Ramp Hackathon, Round 2. All data is sample data.
           </p>

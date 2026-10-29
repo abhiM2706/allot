@@ -1,8 +1,8 @@
-# Tabbed
+# Allot
 
-**T&E tied to the customer it was for.**
+**Allot every receipt to the account it was for.**
 
-Ramp shows what a company spent. Tabbed adds which customer it was for and whether it was worth it. A sales rep texts a photo of a receipt. An agent reads it, matches it to a calendar event and a CRM opportunity, tags the account, writes the memo, and routes it for approval. Finance sees T&E as a share of each account's deal value, with accounts over a limit flagged while the deal is still open.
+Ramp shows what a company spent. Allot adds which customer it was for and whether it was worth it. A sales rep texts a photo of a receipt. An agent reads it, matches it to a calendar event and a CRM opportunity, tags the account, writes the memo, and routes it for approval. Finance sees T&E as a share of each account's deal value, with accounts over a limit flagged while the deal is still open.
 
 Built for the BBS × Ramp Hackathon (Round 2, technical build). All names, accounts, deals and dollar figures are sample data.
 

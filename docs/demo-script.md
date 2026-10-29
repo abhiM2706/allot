@@ -2,7 +2,7 @@
 
 Before you start: `make dev`, open http://localhost:3000 in one tab. Reset the rep thread. Have the finance overview open in a second tab.
 
-**Open (20s).** "I use Ramp for my stipends. It tells you what was spent, not what it was for. For a sales team that means client dinners land in one T&E bucket and nobody knows until the end of the quarter whether they were worth it. Tabbed fixes that with one text message."
+**Open (20s).** "I use Ramp for my stipends. It tells you what was spent, not what it was for. For a sales team that means client dinners land in one T&E bucket and nobody knows until the end of the quarter whether they were worth it. Allot fixes that with one text message."
 
 **Rep (60s).** Click **Rep**. "Maya just paid for dinner. She texts the receipt." Send *Harbor Table*. Read the reply aloud: it found the 7 PM calendar event, found Northwind's $240K renewal, tagged it, and asked one question. Type "Me, Dana, Chris, and Jordan from SE". Point at the memo card. "Eleven seconds. No app, no dropdown."
 
@@ -16,7 +16,7 @@ Send *Blue Door Coffee*. "No attendees on the calendar, so it does not guess. Th
 
 **Admin (20s).** Open **Settings**. "The limit is a share of deal value, with a flat cap for small deals and higher limits for strategic accounts. Nothing blocks the card. And finance decides what the agent may do without asking." Change the default limit to 30%, save, go back to Overview: the flag record stays, the arithmetic changes.
 
-**Close (15s).** "Ramp already matches receipts and drafts memos. Tabbed adds the customer and the revenue behind each one. The matching is live Claude vision plus a deterministic scorer; the money rules are plain arithmetic a CFO can audit."
+**Close (15s).** "Ramp already matches receipts and drafts memos. Allot adds the customer and the revenue behind each one. The matching is live Claude vision plus a deterministic scorer; the money rules are plain arithmetic a CFO can audit."
 
 ## If something goes wrong
 
