@@ -25,7 +25,7 @@ class Settings(BaseSettings):
 
     # Anthropic API
     anthropic_api_key: str | None = None
-    anthropic_model: str = "claude-sonnet-4-5"
+    anthropic_model: str = "claude-haiku-5-5"
 
     # Optional. Without these the SMS adapter logs outbound messages instead of sending.
     twilio_account_sid: str | None = None

@@ -14,7 +14,7 @@ Built for the BBS × Ramp Hackathon (Round 2, technical build). All names, accou
 
 | Piece | Status |
 | --- | --- |
-| Receipt reading from a photo | **Real.** Claude Sonnet 4.5 vision, via the Anthropic API (default) or Amazon Bedrock. Without credentials, the three sample receipts carry a JSON sidecar so the rest of the pipeline still runs. |
+| Receipt reading from a photo | **Real.** Claude Haiku 5.5 vision, via the Anthropic API (default) or Amazon Bedrock. Without credentials, the three sample receipts carry a JSON sidecar so the rest of the pipeline still runs. |
 | Account matching | **Real.** Deterministic scorer (calendar time gap, attendee email domains, event title, rep memory, ownership) plus Claude adjudication when a key is set. The model can lower confidence; it cannot raise it above the evidence. |
 | One-question fallback | **Real.** Below the confidence threshold the agent texts up to three options and remembers the answer per merchant, hour and rep. |
 | Memo drafting | **Real.** Claude when available, template otherwise. |
@@ -60,7 +60,7 @@ Six scenario tests cover: seed numbers match the design, dinner with calendar + 
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` | — | Alternative to the bearer token. Leave all blank to use `~/.aws/credentials` or an instance role. |
 | `BEDROCK_MODEL` | `global.anthropic.claude-sonnet-4-5-20250929-v1:0` | Sonnet 4.5 on Bedrock requires an inference profile prefix (`global.`, `us.`, `eu.`). |
 | `ANTHROPIC_API_KEY` | — | From platform.claude.com/settings/keys. Max and Team plan monthly API credits apply to this path. |
-| `ANTHROPIC_MODEL` | `claude-sonnet-4-5` | |
+| `ANTHROPIC_MODEL` | `claude-haiku-5-5` | Haiku handles every step here (receipt JSON, three-way match, one-line memo) at roughly $0.0005 per receipt. Switch to `claude-sonnet-5-5` for harder receipts. |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` | — | Set all three to send real texts. Point your Twilio number's messaging webhook at `POST https://<your-host>/sms/twilio`. Rep phone numbers live in `fixtures/people.json`. |
 
 ### Going live with Twilio for the demo
