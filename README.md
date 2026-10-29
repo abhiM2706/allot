@@ -14,7 +14,7 @@ Built for the BBS × Ramp Hackathon (Round 2, technical build). All names, accou
 
 | Piece | Status |
 | --- | --- |
-| Receipt reading from a photo | **Real.** Claude vision (`claude-sonnet-4-5`). Without an API key, the three sample receipts carry a JSON sidecar so the rest of the pipeline still runs. |
+| Receipt reading from a photo | **Real.** Claude Sonnet 4.5 vision, via Amazon Bedrock (default) or the Anthropic API. Without credentials, the three sample receipts carry a JSON sidecar so the rest of the pipeline still runs. |
 | Account matching | **Real.** Deterministic scorer (calendar time gap, attendee email domains, event title, rep memory, ownership) plus Claude adjudication when a key is set. The model can lower confidence; it cannot raise it above the evidence. |
 | One-question fallback | **Real.** Below the confidence threshold the agent texts up to three options and remembers the answer per merchant, hour and rep. |
 | Memo drafting | **Real.** Claude when available, template otherwise. |
@@ -32,7 +32,7 @@ Requirements: Python 3.11+, Node 20+.
 # backend
 cd backend
 pip install -r requirements.txt
-cp .env.example .env            # add ANTHROPIC_API_KEY, or leave PROVIDER=mock
+cp .env.example .env            # add your Bedrock key (see below), or set PROVIDER=mock
 python fixtures/make_receipts.py # generates the three sample receipt photos
 uvicorn app.main:app --reload --port 8000
 
@@ -54,9 +54,12 @@ Six scenario tests cover: seed numbers match the design, dinner with calendar + 
 
 | Variable | Default | Notes |
 | --- | --- | --- |
-| `PROVIDER` | `anthropic` | `anthropic` or `mock`. With `anthropic` and no key, the code falls back to mock. |
-| `ANTHROPIC_API_KEY` | — | Enables vision receipt reading, LLM adjudication, LLM memos, and uploading your own receipt photos. |
-| `ANTHROPIC_MODEL` | `claude-sonnet-4-5` | |
+| `PROVIDER` | `bedrock` | `bedrock`, `anthropic` or `mock`. With no credentials for the chosen provider, the code falls back to mock. |
+| `AWS_REGION` | `us-west-2` | Bedrock region. |
+| `AWS_BEARER_TOKEN_BEDROCK` | — | A Bedrock API key (bearer token). Simplest option. |
+| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` | — | Alternative to the bearer token. Leave all blank to use `~/.aws/credentials` or an instance role. |
+| `BEDROCK_MODEL` | `global.anthropic.claude-sonnet-4-5-20250929-v1:0` | Sonnet 4.5 on Bedrock requires an inference profile prefix (`global.`, `us.`, `eu.`). |
+| `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | — | Only if `PROVIDER=anthropic`. |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` | — | Set all three to send real texts. Point your Twilio number's messaging webhook at `POST https://<your-host>/sms/twilio`. Rep phone numbers live in `fixtures/people.json`. |
 
 ### Going live with Twilio for the demo

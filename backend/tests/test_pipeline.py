@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-os.environ.setdefault("PROVIDER", "mock")
+os.environ["PROVIDER"] = "mock"
 from app import db as DB  # noqa: E402
 from app import rules as R  # noqa: E402
 from app.adapters.crm import CRM  # noqa: E402

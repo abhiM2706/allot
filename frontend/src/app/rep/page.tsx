@@ -107,7 +107,7 @@ export default function RepPage() {
         <div className="card p-5">
           <div className="font-semibold text-lg">Phone simulator</div>
           <p className="text-sm text-mute mt-1">
-            Same handler as the Twilio webhook. Receipt reading and matching run {health?.provider === "anthropic" ? "on Claude" : "on the deterministic matcher (no API key set)"}.
+            Same handler as the Twilio webhook. Receipt reading and matching run {health?.provider === "bedrock" ? "on Claude via Amazon Bedrock" : health?.provider === "anthropic" ? "on Claude" : "on the deterministic matcher (no model credentials set)"}.
           </p>
         </div>
         <div className="card p-5 flex flex-col gap-3">
@@ -123,7 +123,7 @@ export default function RepPage() {
             Upload any receipt photo
             <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
           </label>
-          <div className="text-xs text-mute">Uploading your own photo needs the Anthropic key on the backend; sample receipts work either way.</div>
+          <div className="text-xs text-mute">Uploading your own photo needs model credentials on the backend (Bedrock or Anthropic); sample receipts work either way.</div>
         </div>
         <div className="flex gap-2">
           <button onClick={reset} className="btn-ghost h-10 text-sm">Reset thread</button>

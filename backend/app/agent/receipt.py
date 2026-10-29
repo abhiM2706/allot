@@ -34,7 +34,14 @@ def read_receipt(image: bytes | None, media_type: str = "image/jpeg", hints: dic
     """`hints` lets the simulator (and tests) pass known fields. The live path uses the model."""
     hints = hints or {}
     if image is not None and settings.llm_enabled:
-        out = llm.ask_json(SYSTEM, "Read this receipt.", image=image, image_media_type=media_type)
+        try:
+            out = llm.ask_json(SYSTEM, "Read this receipt.", image=image, image_media_type=media_type)
+        except Exception as exc:
+            # Bad credentials, region without the model, network: fall back to the sidecar hints if we have them
+            if hints.get("total") is None:
+                raise
+            out = {}
+            hints = {**hints, "note": f"model unavailable: {type(exc).__name__}"}
         return Receipt(
             merchant=out.get("merchant") or hints.get("merchant") or "Unknown merchant",
             total=out.get("total") if out.get("total") is not None else hints.get("total"),

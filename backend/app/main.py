@@ -328,7 +328,8 @@ def read_settings(conn=Depends(db)):
         {"name": "Google Calendar", "detail": "Event titles and attendees. Read only (fixture).", "connected": True},
         {"name": "Twilio SMS", "detail": settings.twilio_from_number or "Simulator only. Add Twilio env vars to go live.",
          "connected": bool(settings.twilio_from_number)},
-        {"name": "Claude", "detail": settings.anthropic_model if settings.llm_enabled else "No API key. Running deterministic matcher.",
+        {"name": "Claude" + (" via Amazon Bedrock" if settings.provider == "bedrock" else ""),
+         "detail": settings.model_label if settings.llm_enabled else "No credentials. Running deterministic matcher.",
          "connected": settings.llm_enabled},
         {"name": "HubSpot", "detail": "Not connected", "connected": False},
     ]
@@ -365,5 +366,5 @@ def reset(conn=Depends(db)):
 
 @app.get("/health")
 def health():
-    return {"ok": True, "provider": "anthropic" if settings.llm_enabled else "mock",
-            "twilio": bool(settings.twilio_from_number)}
+    return {"ok": True, "provider": settings.provider if settings.llm_enabled else "mock",
+            "model": settings.model_label if settings.llm_enabled else None, "twilio": bool(settings.twilio_from_number)}

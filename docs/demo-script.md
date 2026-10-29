@@ -22,4 +22,4 @@ Send *Blue Door Coffee*. "No attendees on the calendar, so it does not guess. Th
 
 - Thread looks stale: click **Reset thread**.
 - Numbers off after experiments: `curl -X POST localhost:8000/admin/reset` reseeds everything.
-- No API key on the demo machine: the sample receipts still work end to end. Only "Upload any receipt photo" needs the key.
+- No model credentials on the demo machine: the sample receipts still work end to end. Only "Upload any receipt photo" needs the model credentials.
