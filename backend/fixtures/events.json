@@ -1,0 +1,6 @@
+[
+  {"id": "ev_chicago", "name": "Chicago summit", "start": "2026-10-07", "end": "2026-10-09", "city": "Chicago", "reps": ["rep_maya", "rep_tom", "rep_x1", "rep_x2"], "spend": 48000, "pipeline_sourced": 410000,
+   "reached": [["Northwind Logistics", "Renewal, $240K. Dinner on Oct 7 ($412)."], ["Harbor and Vale", "Expansion, $120K. Booth meeting, no spend."], ["2 new opportunities", "$50K combined, created Oct 12 and Oct 16."]]},
+  {"id": "ev_hitexpo", "name": "Healthcare IT Expo", "start": "2026-09-16", "end": "2026-09-18", "city": "Las Vegas", "reps": ["rep_tom", "rep_x1"], "spend": 17000, "pipeline_sourced": 96000, "reached": []},
+  {"id": "ev_sfdinner", "name": "Customer dinner, SF", "start": "2026-09-04", "end": "2026-09-04", "city": "San Francisco", "reps": ["rep_maya", "rep_tom", "rep_x1"], "spend": 6000, "pipeline_sourced": 22000, "reached": []}
+]

@@ -1,0 +1,12 @@
+{
+  "reps": [
+    {"id": "rep_maya", "name": "Maya Okafor", "email": "maya@acme.example", "phone": "+15105550101", "manager_id": "mgr_priya", "department": "Sales"},
+    {"id": "rep_tom", "name": "Tom Reyes", "email": "tom@acme.example", "phone": "+15105550102", "manager_id": "mgr_priya", "department": "Sales"}
+  ],
+  "managers": [
+    {"id": "mgr_priya", "name": "Priya Shah", "email": "priya@acme.example"}
+  ],
+  "finance": [
+    {"id": "fin_dana", "name": "Dana Whitfield", "email": "dana.w@acme.example"}
+  ]
+}

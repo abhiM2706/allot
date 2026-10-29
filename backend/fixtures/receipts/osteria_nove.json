@@ -1,0 +1,20 @@
+{
+  "merchant": "Osteria Nove",
+  "city": "San Francisco",
+  "total": 1240.0,
+  "guest_count": 6,
+  "occurred_at": "2026-10-14T21:52:00-07:00",
+  "items": [
+    {
+      "name": "Tasting menu x6",
+      "amount": 840
+    },
+    {
+      "name": "Wine pairing x4",
+      "amount": 280
+    }
+  ],
+  "rep_id": "rep_tom",
+  "order": 3,
+  "label": "Tom's Pinecrest team dinner. Already seeded; re-sending shows the over-limit routing."
+}

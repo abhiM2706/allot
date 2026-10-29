@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0E1726;
+  --color-mute: #4A5565;
+  --color-teal: #0F766E;
+  --color-teal-deep: #0B5A53;
+  --color-teal-tint: #E6F4F1;
+  --color-teal-line: #A8D5CD;
+  --color-bg: #F4F6F8;
+  --color-line: #DDE3EA;
+  --color-line-soft: #EEF1F4;
+  --color-track: #E7ECF1;
+  --color-field: #B8C1CC;
+  --color-orange: #C2410C;
+  --color-orange-text: #9A3412;
+  --color-orange-deep: #7C2D12;
+  --color-orange-tint: #FFF4E5;
+  --color-orange-soft: #FFF9F0;
+  --color-orange-line: #F0C48A;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html, body { background: var(--color-bg); color: var(--color-ink); font-family: var(--font-sans); }
+.card { @apply bg-white border border-line rounded-2xl; }
+.btn { @apply inline-flex items-center justify-center h-11 px-4 rounded-xl font-semibold text-[15px] bg-teal text-white disabled:opacity-50 cursor-pointer; }
+.btn-ghost { @apply inline-flex items-center justify-center h-11 px-4 rounded-xl font-semibold text-[15px] bg-white text-ink border border-field cursor-pointer; }
+.label { @apply text-xs font-semibold tracking-wider text-mute; }
+.chip { @apply inline-flex items-center h-7 px-2.5 rounded-full text-xs font-semibold; }
+.chip-ok { @apply bg-teal-tint text-teal-deep; }
+.chip-warn { @apply bg-orange-tint text-orange-text; }

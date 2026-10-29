@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+backend/.env
+backend/tabbed.db*
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
+.DS_Store

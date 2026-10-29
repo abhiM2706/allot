@@ -1,0 +1,60 @@
+[
+  {
+    "id": "acc_northwind",
+    "name": "Northwind Logistics",
+    "domain": "northwindlogistics.com",
+    "deal_type": "Renewal",
+    "deal_value": 240000,
+    "stage": "Negotiation",
+    "close_date": "2026-12-01",
+    "owner_rep_id": "rep_maya",
+    "stage_changed_at": "2026-10-10",
+    "contacts": [
+      {"name": "Dana Whitfield", "email": "dana@northwindlogistics.com", "title": "VP Operations"},
+      {"name": "Chris Park", "email": "chris.park@northwindlogistics.com", "title": "Ops Lead"}
+    ]
+  },
+  {
+    "id": "acc_pinecrest",
+    "name": "Pinecrest Health",
+    "domain": "pinecresthealth.org",
+    "deal_type": "New business",
+    "deal_value": 35000,
+    "stage": "Proposal",
+    "close_date": "2026-12-12",
+    "owner_rep_id": "rep_tom",
+    "stage_changed_at": "2026-08-15",
+    "contacts": [
+      {"name": "Elena Marsh", "email": "emarsh@pinecresthealth.org", "title": "Director, Clinical IT"},
+      {"name": "Raj Patel", "email": "rpatel@pinecresthealth.org", "title": "Procurement"}
+    ]
+  },
+  {
+    "id": "acc_lumen",
+    "name": "Lumen Retail",
+    "domain": "lumenretail.com",
+    "deal_type": "New business",
+    "deal_value": 68000,
+    "stage": "Discovery",
+    "close_date": "2027-01-20",
+    "owner_rep_id": "rep_maya",
+    "stage_changed_at": "2026-10-01",
+    "contacts": [
+      {"name": "Sam Ortega", "email": "sam.ortega@lumenretail.com", "title": "Buyer"}
+    ]
+  },
+  {
+    "id": "acc_harborvale",
+    "name": "Harbor and Vale",
+    "domain": "harborandvale.com",
+    "deal_type": "Expansion",
+    "deal_value": 120000,
+    "stage": "Proposal",
+    "close_date": "2026-11-30",
+    "owner_rep_id": "rep_tom",
+    "stage_changed_at": "2026-10-05",
+    "contacts": [
+      {"name": "Priya Nair", "email": "pnair@harborandvale.com", "title": "COO"}
+    ]
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "evt_1", "rep_id": "rep_maya",
+    "title": "Dinner with Northwind (Dana, Chris)",
+    "start": "2026-10-27T19:00:00-05:00", "end": "2026-10-27T21:30:00-05:00",
+    "location": "Harbor Table, Chicago",
+    "attendees": ["maya@acme.example", "jordan@acme.example", "dana@northwindlogistics.com", "chris.park@northwindlogistics.com"]
+  },
+  {
+    "id": "evt_2", "rep_id": "rep_maya",
+    "title": "Coffee",
+    "start": "2026-10-29T13:00:00-07:00", "end": "2026-10-29T13:45:00-07:00",
+    "location": "Oakland",
+    "attendees": ["maya@acme.example"]
+  },
+  {
+    "id": "evt_3", "rep_id": "rep_maya",
+    "title": "Follow-up call",
+    "start": "2026-10-29T12:00:00-07:00", "end": "2026-10-29T12:30:00-07:00",
+    "location": "",
+    "attendees": ["maya@acme.example"]
+  },
+  {
+    "id": "evt_4", "rep_id": "rep_tom",
+    "title": "Team dinner - Pinecrest",
+    "start": "2026-10-14T19:30:00-07:00", "end": "2026-10-14T22:00:00-07:00",
+    "location": "Osteria Nove, San Francisco",
+    "attendees": ["tom@acme.example", "emarsh@pinecresthealth.org", "rpatel@pinecresthealth.org"]
+  },
+  {
+    "id": "evt_5", "rep_id": "rep_maya",
+    "title": "Pipeline review (internal)",
+    "start": "2026-10-29T16:30:00-07:00", "end": "2026-10-29T17:00:00-07:00",
+    "location": "",
+    "attendees": ["maya@acme.example", "priya@acme.example"]
+  }
+]

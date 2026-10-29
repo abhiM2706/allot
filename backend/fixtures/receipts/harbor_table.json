@@ -1,0 +1,40 @@
+{
+  "merchant": "Harbor Table",
+  "city": "Chicago",
+  "total": 412.0,
+  "guest_count": 4,
+  "occurred_at": "2026-10-27T21:52:00-05:00",
+  "items": [
+    {
+      "name": "Branzino",
+      "amount": 48
+    },
+    {
+      "name": "Ribeye",
+      "amount": 64
+    },
+    {
+      "name": "Short rib",
+      "amount": 42
+    },
+    {
+      "name": "Risotto",
+      "amount": 34
+    },
+    {
+      "name": "Wine, Barolo",
+      "amount": 118
+    },
+    {
+      "name": "Dessert x2",
+      "amount": 26
+    },
+    {
+      "name": "Sparkling water",
+      "amount": 24
+    }
+  ],
+  "rep_id": "rep_maya",
+  "order": 1,
+  "label": "Client dinner, Chicago. Calendar + CRM both match (auto-tag path)."
+}

@@ -1,0 +1,24 @@
+{
+  "merchant": "Blue Door Coffee",
+  "city": "Oakland",
+  "total": 18.4,
+  "guest_count": null,
+  "occurred_at": "2026-10-29T13:12:00-07:00",
+  "items": [
+    {
+      "name": "Latte",
+      "amount": 6.5
+    },
+    {
+      "name": "Latte",
+      "amount": 6.5
+    },
+    {
+      "name": "Almond croissant",
+      "amount": 5.4
+    }
+  ],
+  "rep_id": "rep_maya",
+  "order": 2,
+  "label": "Coffee with no attendees on the calendar. Agent asks which account (clarify path)."
+}
