@@ -6,6 +6,7 @@ import { Phone, Header, Bar } from "@/components/ui";
 
 type Msg = { id: number; direction: "in" | "out" | "finance" | "manager"; body: string; media_url?: string | null; payload?: { kind?: string; options?: { n: number; label: string }[]; account?: string; memo?: string; confidence?: number; evidence?: string; status?: string } | null };
 type Fixture = { file: string; url: string; merchant: string; total: number; label: string; rep_id: string };
+type Thread = { id: string; label: string; guest: boolean; count: number };
 type Summary = { rep: { name: string }; recent: { id: string; merchant: string; amount: number; account_name: string | null; status: string; created_at: string }[]; accounts: { id: string; name: string; deal_value: number; te: number; ratio: number; limit: number; over_limit: boolean }[]; finance_question: { body: string } | null };
 
 const REPS = [{ id: "rep_maya", name: "Maya Okafor" }, { id: "rep_tom", name: "Tom Reyes" }];
@@ -18,17 +19,23 @@ export default function RepPage() {
   const [busy, setBusy] = useState(false);
   const [tab, setTab] = useState<"thread" | "expenses">("thread");
   const [summary, setSummary] = useState<Summary | null>(null);
-  const [health, setHealth] = useState<{ provider: string } | null>(null);
+  const [health, setHealth] = useState<{ provider: string; twilio?: boolean } | null>(null);
+  const [guests, setGuests] = useState<Thread[]>([]);
   const bottom = useRef<HTMLDivElement>(null);
   const [clock, setClock] = useState("9:41");
   useEffect(() => { setClock(new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).replace(/ [AP]M/, "")); }, []);
 
+  const isGuest = rep.startsWith("guest:");
   const refresh = useCallback(async () => {
-    const [m, s] = await Promise.all([get<Msg[]>(`/thread/${rep}`), get<Summary>(`/rep/${rep}/summary`)]);
-    setMsgs(m); setSummary(s);
-  }, [rep]);
+    const [m, s, t] = await Promise.all([
+      get<Msg[]>(`/thread/${encodeURIComponent(rep)}`),
+      get<Summary>(`/rep/${isGuest ? "rep_maya" : rep}/summary`),
+      get<Thread[]>("/threads"),
+    ]);
+    setMsgs(m); setSummary(s); setGuests(t.filter((x) => x.guest));
+  }, [rep, isGuest]);
 
-  useEffect(() => { get<Fixture[]>("/fixtures").then(setFixtures); get<{ provider: string }>("/health").then(setHealth); }, []);
+  useEffect(() => { get<Fixture[]>("/fixtures").then(setFixtures); get<{ provider: string; twilio?: boolean }>("/health").then(setHealth); }, []);
   useEffect(() => { refresh(); const t = setInterval(refresh, 4000); return () => clearInterval(t); }, [refresh]);
   useEffect(() => { bottom.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs.length]);
 
@@ -49,7 +56,7 @@ export default function RepPage() {
     await fetch(`${API}/sms/upload`, { method: "POST", body: fd });
     await refresh(); setBusy(false);
   }
-  async function reset() { await send(`/thread/${rep}/reset`); await refresh(); }
+  async function reset() { await send(`/thread/${encodeURIComponent(rep)}/reset`); await refresh(); }
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row gap-10 items-start justify-center px-6 py-10">
@@ -60,6 +67,14 @@ export default function RepPage() {
           ))}
           <button onClick={() => setTab(tab === "thread" ? "expenses" : "thread")} className="chip bg-white border border-field">{tab === "thread" ? "My expenses" : "Messages"}</button>
         </div>
+        {guests.length > 0 && (
+          <div className="flex flex-wrap gap-2 justify-center max-w-[390px]">
+            <span className="text-xs text-mute self-center">Live texts:</span>
+            {guests.map((g) => (
+              <button key={g.id} onClick={() => { setRep(g.id); setTab("thread"); }} className={`chip ${rep === g.id ? "bg-orange text-white" : "bg-orange-tint text-orange-text border border-orange-line"}`}>{g.label} · {g.count}</button>
+            ))}
+          </div>
+        )}
         {tab === "thread" ? (
           <Phone title="Allot" sub="Text a receipt to log it" clock={clock}>
             <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-2.5">
@@ -107,12 +122,12 @@ export default function RepPage() {
         <div className="card p-5">
           <div className="font-semibold text-lg">Phone simulator</div>
           <p className="text-sm text-mute mt-1">
-            Same handler as the Twilio webhook. Receipt reading and matching run {health?.provider === "bedrock" ? "on Claude via Amazon Bedrock" : health?.provider === "anthropic" ? "on Claude" : "on the deterministic matcher (no model credentials set)"}.
+            {health?.twilio ? "Live: text a receipt photo to the number on screen and it appears here under Live texts. " : ""}Same handler as the Twilio webhook. Receipt reading and matching run {health?.provider === "bedrock" ? "on Claude via Amazon Bedrock" : health?.provider === "anthropic" ? "on Claude" : "on the deterministic matcher (no model credentials set)"}.
           </p>
         </div>
         <div className="card p-5 flex flex-col gap-3">
           <div className="font-semibold">Send a sample receipt</div>
-          {fixtures.filter((f) => f.rep_id === rep).map((f) => (
+          {fixtures.filter((f) => f.rep_id === (isGuest ? "rep_maya" : rep)).map((f) => (
             <button key={f.file} onClick={() => sendReceipt(f.file)} disabled={busy} className="flex gap-3 items-start text-left p-3 rounded-xl border border-line hover:border-teal disabled:opacity-50">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={`${API}${f.url}`} alt="" className="w-14 h-20 object-cover object-top rounded border border-line" />

@@ -20,7 +20,7 @@ Built for the BBS × Ramp Hackathon (Round 2, technical build). All names, accou
 | Memo drafting | **Real.** Claude when available, template otherwise. |
 | Auto-approval, spend-vs-deal ratio, limit flag | **Real.** Plain arithmetic in `backend/app/rules.py`. No model touches money decisions. |
 | Manager queue, finance overview, account detail, events, settings | **Real.** Computed from SQLite on every request. Settings changes recompute every flag. |
-| SMS | **Real, optional.** `/sms/twilio` is a Twilio webhook. The browser simulator calls the same handler, so the demo does not depend on a phone number. |
+| SMS / WhatsApp | **Real, optional.** `/sms/twilio` is a Twilio webhook (SMS, MMS, WhatsApp sandbox) with signature validation; unknown senders become demo guests. The browser simulator calls the same handler, so the demo does not depend on a phone number. |
 | Salesforce, Google Calendar | **Fixtures.** `backend/fixtures/accounts.json` and `calendar.json`, read through adapter classes in `backend/app/adapters/`. A live integration implements the same two or three methods. |
 | Ramp | **Not connected in the demo.** The design writes the account and memo back to a Ramp custom accounting field via the Ramp API; here the expense table stands in for it. |
 
@@ -48,7 +48,7 @@ Tests (no API key needed):
 cd backend && PROVIDER=mock pytest -q
 ```
 
-Six scenario tests cover: seed numbers match the design, dinner with calendar + CRM auto-tags, coffee without attendees asks and then remembers, over-limit accounts never auto-approve, "not a customer expense" is left untagged, raising the limit changes arithmetic but not history.
+Ten tests cover the webhook (signature, WhatsApp prefix, guest threads) and six scenarios: seed numbers match the design, dinner with calendar + CRM auto-tags, coffee without attendees asks and then remembers, over-limit accounts never auto-approve, "not a customer expense" is left untagged, raising the limit changes arithmetic but not history.
 
 ### Environment variables (`backend/.env`)
 
@@ -65,9 +65,7 @@ Six scenario tests cover: seed numbers match the design, dinner with calendar + 
 
 ### Going live with Twilio for the demo
 
-1. Create a Twilio trial number and set the three env vars.
-2. Expose the backend (`ngrok http 8000`) and set the number's webhook to `https://<ngrok>/sms/twilio`.
-3. Put a judge's phone number on one of the reps in `fixtures/people.json`, restart, and have them text a receipt photo.
+See [docs/twilio-setup.md](docs/twilio-setup.md). Short version: upgraded Twilio account, a toll-free number with verification submitted early, the WhatsApp sandbox as an instant fallback, `ngrok http 8000` or a Railway deploy for the webhook URL. Unknown numbers (judges) are handled as guests under `DEMO_FALLBACK_REP` with their own threads, which appear on the rep screen under **Live texts**. The webhook verifies Twilio's `X-Twilio-Signature`.
 
 ## How it works
 

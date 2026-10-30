@@ -31,6 +31,11 @@ class Settings(BaseSettings):
     twilio_account_sid: str | None = None
     twilio_auth_token: str | None = None
     twilio_from_number: str | None = None
+    # Verify X-Twilio-Signature on the inbound webhook (needs twilio_auth_token). Turn off only while debugging tunnels.
+    twilio_validate_signature: bool = True
+    # Phone numbers not in fixtures/people.json (judges at the demo) are treated as this rep's persona, each with
+    # their own thread. Set to empty to reject unknown numbers.
+    demo_fallback_rep: str = "rep_maya"
 
     database_path: Path = BACKEND_DIR / "allot.db"
     cors_origins: list[str] = ["http://localhost:3000"]

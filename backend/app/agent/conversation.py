@@ -75,24 +75,26 @@ def _rep_phone(rep_id: str) -> str | None:
 
 def handle_inbound(conn: sqlite3.Connection, rep_id: str, text: str | None = None, image: bytes | None = None,
                    media_type: str = "image/jpeg", media_url: str | None = None, hints: dict | None = None,
-                   now: datetime | None = None, deliver: bool = False) -> Turn:
-    """Process one inbound message. `deliver=True` also sends replies over SMS (Twilio path)."""
+                   now: datetime | None = None, deliver: bool = False, thread_id: str | None = None) -> Turn:
+    """Process one inbound message. `thread_id` separates conversations that share a rep persona (demo guests).
+    `deliver=True` also sends replies over SMS (Twilio path)."""
     crm, cal = CRM(conn), Calendar()
-    state = _state(conn, rep_id)
-    _log(conn, rep_id, "in", text or "", media_url, {"hints": hints} if hints else None)
+    tid = thread_id or rep_id
+    state = _state(conn, tid)
+    _log(conn, tid, "in", text or "", media_url, {"hints": hints} if hints else None)
     turn = Turn()
 
     if image is not None or (hints and hints.get("merchant")):
-        turn = _on_receipt(conn, rep_id, image, media_type, hints or {}, now, crm, cal)
+        turn = _on_receipt(conn, rep_id, image, media_type, hints or {}, now, crm, cal, tid)
     elif state["name"] == "awaiting_attendees":
-        turn = _on_attendees(conn, rep_id, state, text or "", crm, cal)
+        turn = _on_attendees(conn, rep_id, state, text or "", crm, cal, tid)
     elif state["name"] == "awaiting_account":
-        turn = _on_account_choice(conn, rep_id, state, text or "", crm, cal)
+        turn = _on_account_choice(conn, rep_id, state, text or "", crm, cal, tid)
     else:
         turn.replies.append(Reply("Text me a photo of a receipt and I’ll log it, tag the customer, and send it for approval."))
 
     for r in turn.replies:
-        _log(conn, rep_id, "out", r.body, None, r.card)
+        _log(conn, tid, "out", r.body, None, r.card)
         if deliver:
             phone = _rep_phone(rep_id)
             if phone:
@@ -100,7 +102,8 @@ def handle_inbound(conn: sqlite3.Connection, rep_id: str, text: str | None = Non
     return turn
 
 
-def _on_receipt(conn, rep_id, image, media_type, hints, now, crm, cal) -> Turn:
+def _on_receipt(conn, rep_id, image, media_type, hints, now, crm, cal, tid=None) -> Turn:
+    tid = tid or rep_id
     turn = Turn()
     receipt: Receipt = read_receipt(image, media_type, hints, now)
     when = datetime.fromisoformat(receipt.occurred_at) if receipt.occurred_at else (now or datetime.now())
@@ -135,7 +138,7 @@ def _on_receipt(conn, rep_id, image, media_type, hints, now, crm, cal) -> Turn:
                 f"{_k(acc.deal_value)} {acc.deal_type.lower()}. Tagging it there. Who joined you?")
         turn.replies.append(Reply(body, {"kind": "tagged", "account": acc.name, "confidence": round(res.confidence, 2),
                                          "evidence": res.evidence}))
-        _set_state(conn, rep_id, {"name": "awaiting_attendees", "expense_id": exp_id, "event_id": res.event.id if res.event else None})
+        _set_state(conn, tid, {"name": "awaiting_attendees", "expense_id": exp_id, "event_id": res.event.id if res.event else None})
         turn.state = "awaiting_attendees"
         return turn
 
@@ -151,13 +154,14 @@ def _on_receipt(conn, rep_id, image, media_type, hints, now, crm, cal) -> Turn:
     body = f"{_money(receipt.total)} at {receipt.merchant}. {why} Which account was this for?\n" + \
            "\n".join(f"{o['n']}. {o['label']}" for o in option_rows)
     turn.replies.append(Reply(body, {"kind": "ask_account", "options": option_rows, "confidence": round(res.confidence, 2)}))
-    _set_state(conn, rep_id, {"name": "awaiting_account", "expense_id": exp_id, "options": option_rows,
+    _set_state(conn, tid, {"name": "awaiting_account", "expense_id": exp_id, "options": option_rows,
                               "event_id": res.event.id if res.event else None})
     turn.state = "awaiting_account"
     return turn
 
 
-def _on_account_choice(conn, rep_id, state, text, crm, cal) -> Turn:
+def _on_account_choice(conn, rep_id, state, text, crm, cal, tid=None) -> Turn:
+    tid = tid or rep_id
     turn = Turn(expense_id=state["expense_id"])
     choice = None
     t = text.strip().lower()
@@ -175,7 +179,7 @@ def _on_account_choice(conn, rep_id, state, text, crm, cal) -> Turn:
     if choice["account_id"] is None:
         with cursor(conn) as cur:
             cur.execute("UPDATE expense SET status='personal', memo='Not a customer expense' WHERE id=?", (exp["id"],))
-        _set_state(conn, rep_id, {"name": "idle"})
+        _set_state(conn, tid, {"name": "idle"})
         turn.replies.append(Reply("Noted. I’ll leave it untagged for you to handle in Ramp."))
         return turn
 
@@ -194,11 +198,12 @@ def _on_account_choice(conn, rep_id, state, text, crm, cal) -> Turn:
     body = (f"{acc.name} it is. I’ll remember that {hour} visits to {exp['merchant']} are usually {acc.name.split()[0]}. "
             f"Memo: “{memo}.” {_routed_text(status)}")
     turn.replies.append(Reply(body, {"kind": "done", "account": acc.name, "memo": memo, "status": status}))
-    _set_state(conn, rep_id, {"name": "idle"})
+    _set_state(conn, tid, {"name": "idle"})
     return turn
 
 
-def _on_attendees(conn, rep_id, state, text, crm, cal) -> Turn:
+def _on_attendees(conn, rep_id, state, text, crm, cal, tid=None) -> Turn:
+    tid = tid or rep_id
     turn = Turn(expense_id=state["expense_id"])
     exp = conn.execute("SELECT * FROM expense WHERE id=?", (state["expense_id"],)).fetchone()
     acc = crm.get(exp["account_id"])
@@ -213,7 +218,7 @@ def _on_attendees(conn, rep_id, state, text, crm, cal) -> Turn:
     status = _route(conn, exp["id"], acc, exp["amount"])
     body = f"Done. {_routed_text(status)}"
     turn.replies.append(Reply(body, {"kind": "done", "account": acc.name, "memo": memo, "status": status}))
-    _set_state(conn, rep_id, {"name": "idle"})
+    _set_state(conn, tid, {"name": "idle"})
     return turn
 
 

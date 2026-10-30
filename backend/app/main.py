@@ -89,21 +89,44 @@ async def simulate_upload(rep_id: str = Form(...), file: UploadFile = File(...),
             "replies": [{"body": r.body, "card": r.card} for r in turn.replies]}
 
 
+def _twilio_signature_ok(request: Request, form) -> bool:
+    """Twilio signs each webhook: base64(HMAC-SHA1(auth_token, url + sorted(key+value)))."""
+    if not settings.twilio_validate_signature or not settings.twilio_auth_token:
+        return True
+    import base64, hashlib, hmac
+    proto = request.headers.get("x-forwarded-proto", request.url.scheme)
+    host = request.headers.get("x-forwarded-host", request.headers.get("host", request.url.netloc))
+    url = f"{proto}://{host}{request.url.path}" + (f"?{request.url.query}" if request.url.query else "")
+    payload = url + "".join(k + str(form[k]) for k in sorted(form.keys()))
+    digest = base64.b64encode(hmac.new(settings.twilio_auth_token.encode(), payload.encode(), hashlib.sha1).digest()).decode()
+    return hmac.compare_digest(digest, request.headers.get("x-twilio-signature", ""))
+
+
 @app.post("/sms/twilio")
 async def twilio_webhook(request: Request, conn=Depends(db)):
-    """Twilio inbound webhook. Point your number's messaging webhook here (POST)."""
+    """Twilio inbound webhook for SMS/MMS and WhatsApp. Point the number's "A message comes in" webhook here (POST)."""
     form = await request.form()
-    frm = form.get("From", "")
+    if not _twilio_signature_ok(request, form):
+        raise HTTPException(403, "bad Twilio signature")
+    frm = (form.get("From") or "").replace("whatsapp:", "")
     rep_id = REP_BY_PHONE.get(frm)
+    thread_id = rep_id
     if not rep_id:
-        return Response(_twiml("This number isn’t set up with Allot yet."), media_type="application/xml")
+        if not settings.demo_fallback_rep:
+            return Response(_twiml("This number isn’t set up with Allot yet."), media_type="application/xml")
+        rep_id, thread_id = settings.demo_fallback_rep, f"guest:{frm}"
     image, mtype = None, "image/jpeg"
     if int(form.get("NumMedia", "0") or 0) > 0:
         url, mtype = form.get("MediaUrl0"), form.get("MediaContentType0", "image/jpeg")
         auth = (settings.twilio_account_sid, settings.twilio_auth_token) if settings.twilio_account_sid else None
         image = httpx.get(url, auth=auth, follow_redirects=True, timeout=20).content
-    turn = handle_inbound(conn, rep_id, form.get("Body"), image, mtype, form.get("MediaUrl0"), {})
+    turn = handle_inbound(conn, rep_id, form.get("Body"), image, mtype, form.get("MediaUrl0"), {}, thread_id=thread_id)
     return Response(_twiml(*[r.body for r in turn.replies]), media_type="application/xml")
+
+
+@app.get("/sms/twilio")
+def twilio_webhook_check():
+    return {"ok": True, "hint": "Twilio must POST here. Configure the number's messaging webhook as POST https://<host>/sms/twilio"}
 
 
 def _twiml(*bodies: str) -> str:
@@ -113,6 +136,15 @@ def _twiml(*bodies: str) -> str:
 
 def _x(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+@app.get("/threads")
+def threads(conn=Depends(db)):
+    """Every conversation with a last-message time. Guest threads (judges texting the live number) start with 'guest:'."""
+    rows = conn.execute("SELECT rep_id id, MAX(created_at) last_at, COUNT(*) n FROM thread_message GROUP BY rep_id ORDER BY last_at DESC").fetchall()
+    return [{"id": r["id"], "last_at": r["last_at"], "count": r["n"],
+             "label": REP_NAME.get(r["id"]) or ("Guest " + r["id"].split(":", 1)[1][-4:] if r["id"].startswith("guest:") else r["id"]),
+             "guest": r["id"].startswith("guest:")} for r in rows]
 
 
 @app.get("/thread/{rep_id}")
