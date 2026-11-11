@@ -131,6 +131,8 @@ frontend/
 
 ## Links
 
+- Demo video (1:55, recorded from the live app): [docs/demo.mp4](docs/demo.mp4)
+
 - Figma prototype (Round 1 design, the spec for these screens): https://www.figma.com/design/iBnb9LwxvfHa7Vnkky2Vec
 - Product brief: see `docs/brief.md`
 
